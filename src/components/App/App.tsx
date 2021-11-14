@@ -1,6 +1,8 @@
 import { Center } from '@mantine/core';
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Home } from '../Home/Home';
+import { Login } from '../Login/Login';
 import { Register } from '../Register/Register';
 import './App.css';
 import logo from './logo.svg';
@@ -17,19 +19,16 @@ function App() {
             <li>
               <Link to="/register">Register</Link>
             </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
           </ul>
         </nav>
 
-        <Route
-          path="/"
-          exact
-          component={() => (
-            <Center>
-              <h3>Home</h3>
-            </Center>
-          )}
-        />
+        <Route path="/" exact component={Home} />
         <Route path="/register" exact component={Register} />
+        <Route path="/login" exact component={Login} />
+        <Route path="/home" exact component={Home} />
       </div>
     </Router>
   );

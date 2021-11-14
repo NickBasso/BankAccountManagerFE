@@ -10,7 +10,7 @@ import {
 
 import { useState } from 'react';
 
-export const Register = (): JSX.Element => {
+export const Login = (): JSX.Element => {
   const [opened, setOpened] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [email, setEmail] = useState('');
@@ -22,17 +22,8 @@ export const Register = (): JSX.Element => {
         style={{ backgroundColor: 'rgb(248, 249, 250)', borderRadius: '5px' }}
       >
         <Center style={{ height: 100 }}>
-          <h2>Register</h2>
+          <h2>Login</h2>
         </Center>
-
-        <Grid grow gutter="xl" justify="center" align="space-between">
-          <Col span={2}>
-            {<PasswordInput label="FirstName" required={true}></PasswordInput>}
-          </Col>
-          <Col span={2}>
-            {<PasswordInput label="LastName" required={true}></PasswordInput>}
-          </Col>
-        </Grid>
 
         <PasswordInput
           invalid={true}
