@@ -1,2 +1,3 @@
-# SecureMessenger-FE
-Secure Messenger project frontend part w/ TS, React
+# Bank account manager app - FrontEnd
+
+Secure Bank account management app project frontend part with TS, React, JWT
