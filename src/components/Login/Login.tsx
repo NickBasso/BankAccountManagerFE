@@ -8,12 +8,34 @@ import {
   PasswordInput,
 } from '@mantine/core';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
+const usersDummy = [
+  {
+    email: 'john.doe@gmail.com',
+    password: '123',
+  },
+  {
+    email: 'peter.smithson@gmail.com',
+    password: '321',
+  },
+];
 
 export const Login = (): JSX.Element => {
+  const [users, setUsers] = useState(usersDummy);
   const [opened, setOpened] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const history = useHistory();
+
+  useEffect(() => {
+    console.log('Component did mount!');
+    console.log('email: ', email);
+    console.log('password: ', password);
+  }, [email, password]);
 
   return (
     <>
@@ -33,7 +55,9 @@ export const Login = (): JSX.Element => {
           required={true}
           style={{ padding: '20px 0' }}
           onChange={(event) => {
-            setIsEmailValid(event.currentTarget.value !== email);
+            console.log('email changed!');
+
+            // setIsEmailValid(event.currentTarget.value !== email);
             setEmail(event.currentTarget.value);
           }}
         ></PasswordInput>
@@ -42,10 +66,29 @@ export const Login = (): JSX.Element => {
           type="password"
           label="Password"
           required={true}
+          onChange={(event) => {
+            console.log('email changed!');
+
+            // setIsEmailValid(event.currentTarget.value !== email);
+            setPassword(event.currentTarget.value);
+          }}
         ></PasswordInput>
 
         <Center style={{ height: 100 }}>
-          <Button>Submit</Button>
+          <Button
+            onClick={() => {
+              console.log('Button clicked!');
+
+              for (const user of users) {
+                if (user.email === email && user.password === password) {
+                  // route to home and consider logged in
+                  history.push('/');
+                }
+              }
+            }}
+          >
+            Submit
+          </Button>
         </Center>
       </Container>
     </>
