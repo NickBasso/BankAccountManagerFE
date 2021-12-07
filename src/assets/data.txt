@@ -1,0 +1,259 @@
+import { Box, Container, Select, Tab, Tabs } from '@mantine/core';
+import { access } from 'fs';
+import { useEffect, useState } from 'react';
+
+const banksDummy_ = [
+  { value: 'MICB', label: 'MICB' },
+  { value: 'MAIB', label: 'MAIB' },
+  { value: 'VICTORIABANK', label: 'VICTORIABANK' },
+  { value: 'FINCOMBANK', label: 'FINCOMBANK' },
+];
+
+const usersDummy = [
+  { value: 'John Smith', label: 'John Smith' },
+  { value: 'Alex Lee', label: 'Alex Lee' },
+  { value: 'Peter Johnson', label: 'Peter Johnson' },
+];
+
+const cardsDummy1 = [
+  {
+    value: 'MASTERCARD 5575123412341234',
+    label: 'MASTERCARD 5575123412341234',
+  },
+  { value: 'VISA 4880123412341234', label: 'VISA 4880123412341234' },
+  { value: 'CREDIT-OVERDRAFT-MDL', label: 'CREDIT-OVERDRAFT-MDL' },
+];
+
+const cardsDummy2 = [
+  {
+    value: 'MASTERCARD 5575233412341234',
+    label: 'MASTERCARD 5575233412341234',
+  },
+  {
+    value: 'AMERICAN-EXPRESS 3350233412341234',
+    label: 'AMERICAN-EXPRESS 3350233412341234',
+  },
+];
+
+const cardsDummy3 = [
+  { value: 'VISA 4880233423341234', label: 'VISA 4880233423341234' },
+  { value: 'CREDIT-OVERDRAFT-MDL', label: 'CREDIT-OVERDRAFT-MDL' },
+  {
+    value: 'AMERICAN-EXPRESS 3350233423341234',
+    label: 'AMERICAN-EXPRESS 3350233423341234',
+  },
+];
+
+const transactionsDummy11 = [
+  {
+    date: '05-11-2021,',
+    id: 'Linella 10',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '150',
+  },
+  {
+    date: '14-11-2021,',
+    id: 'Aliexpress',
+    status: 'Spent',
+    currency: 'usd',
+    amount: '35.45',
+  },
+  {
+    date: '15-11-2021,',
+    id: 'Linella 10',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '300',
+  },
+  {
+    date: '25-11-2021,',
+    id: 'Linella 10',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '170',
+  },
+];
+
+const transactionsDummy12 = [
+  {
+    date: '30-10-2021,',
+    id: 'Salary',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '10500',
+  },
+];
+
+const transactionsDummy21 = [
+  {
+    date: '03-11-2021,',
+    id: 'Linella 30',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '450',
+  },
+  {
+    date: '04-11-2021,',
+    id: 'P2P',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '5000',
+  },
+  {
+    date: '10-11-2021,',
+    id: 'Linella 30',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '210',
+  },
+  {
+    date: '10-11-2021,',
+    id: 'P2P',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '7000',
+  },
+  {
+    date: '14-11-2021,',
+    id: 'Joom',
+    status: 'Spent',
+    currency: 'usd',
+    amount: '14.4',
+  },
+  {
+    date: '21-11-2021,',
+    id: 'Linella 30',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '220',
+  },
+];
+
+const transactionsDummy23 = [
+  {
+    date: '03-11-2021,',
+    id: 'Salary',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '8000',
+  },
+  {
+    date: '04-11-2021,',
+    id: 'P2P',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '5000',
+  },
+  {
+    date: '10-11-2021,',
+    id: 'Salary',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '8000',
+  },
+  {
+    date: '10-11-2021,',
+    id: 'P2P',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '7000',
+  },
+  {
+    date: '17-11-2021,',
+    id: 'Salary',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '8000',
+  },
+  {
+    date: '24-11-2021,',
+    id: 'Salary',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '8000',
+  },
+];
+
+const transactionsDummy32 = [
+  {
+    date: '21-11-2021,',
+    id: 'Salary',
+    status: 'Received',
+    currency: 'mdl',
+    amount: '220',
+  },
+];
+
+const transactionsDummy33 = [
+  {
+    date: '21-11-2021,',
+    id: 'Linella 26',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '220',
+  },
+  {
+    date: '21-11-2021,',
+    id: 'Linella 26',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '220',
+  },
+  {
+    date: '21-11-2021,',
+    id: 'Linella 26',
+    status: 'Spent',
+    currency: 'mdl',
+    amount: '220',
+  },
+];
+
+const statementDummy_ = [
+  { value: '21', label: 'AMOUNT1' },
+  { value: '521', label: 'AMOUNT2' },
+  { value: '55', label: 'AMOUNT3' },
+  { value: '7332.12', label: 'AMOUNT4' },
+];
+
+// export const Home = (): JSX.Element => {
+//   const [banks, setBanks] = useState(banksDummy);
+//   const [accounts, setAccounts] = useState(accountsDummy);
+//   const [cards, setCards] = useState(cardsDummy);
+//   const [transcations, setTranscations] = useState(transactionsDummy);
+//   const [statement, setStatement] = useState(statementDummy);
+
+//   return (
+//     <>
+//       <Box>
+//         <Container size={'xs'}>
+//           <Tabs>
+//             <Tab label="Banks">
+//               <Select label="Banks" placeholder="Pick one" data={banks} />
+//             </Tab>
+//             <Tab label="Accounts">
+//               <Select label="Accounts" placeholder="Pick one" data={accounts} />
+//             </Tab>
+//             <Tab label="Cards">
+//               <Select label="Cards" placeholder="Pick one" data={cards} />
+//             </Tab>
+//             <Tab label="Transactions">
+//               <Select
+//                 label="Transactions"
+//                 placeholder="Pick one"
+//                 data={transcations}
+//               />
+//             </Tab>
+//             <Tab label="Statement">
+//               <Select
+//                 label="Statement"
+//                 placeholder="Pick one"
+//                 data={statement}
+//               />
+//             </Tab>
+//           </Tabs>
+//         </Container>
+//       </Box>
+//     </>
+//   );
+// };
