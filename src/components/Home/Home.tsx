@@ -1,12 +1,35 @@
-import { Box, Container, Select, Tab, Tabs } from '@mantine/core';
-import { access } from 'fs';
-import { useEffect, useState } from 'react';
+import {
+  Avatar,
+  Box,
+  Container,
+  Group,
+  Select,
+  Tab,
+  Tabs,
+  Text,
+} from '@mantine/core';
+import { forwardRef, useState } from 'react';
+import aecredit from '../../assets/icons/ae.svg';
+import aedebit from '../../assets/icons/aecredit.svg';
+import fcb from '../../assets/icons/fcb.png';
+import maib from '../../assets/icons/maib.png';
+import mastercard from '../../assets/icons/mastercard.svg';
+import micb from '../../assets/icons/micb.jpg';
+import vb from '../../assets/icons/vb.jpg';
+import visa from '../../assets/icons/visa.svg';
+import { Bank } from '../Bank/Bank';
+import { Card } from '../Card/Card';
+import { Transactions } from '../Transactions/Transactions';
 
 const banksDummy = [
-  { value: 'MICB', label: 'MICB' },
-  { value: 'MAIB', label: 'MAIB' },
-  { value: 'VICTORIABANK', label: 'VICTORIABANK' },
-  { value: 'FINCOMBANK', label: 'FINCOMBANK' },
+  {
+    value: 'MICB',
+    label: 'MICB',
+    image: micb,
+  },
+  { value: 'MAIB', label: 'MAIB', image: maib },
+  { value: 'VICTORIABANK', label: 'VICTORIABANK', image: vb },
+  { value: 'FINCOMBANK', label: 'FINCOMBANK', image: fcb },
 ];
 
 const accountsDummy = [
@@ -17,10 +40,10 @@ const accountsDummy = [
 ];
 
 const cardsDummy = [
-  { value: 'ACC-MASTERCARD', label: 'ACC-MASTERCARD' },
-  { value: 'ACC-VISA', label: 'ACC-VISA' },
-  { value: 'CREDIT-OVERDRAFT-MDL', label: 'CREDIT-OVERDRAFT-MDL' },
-  { value: 'DEBIT-AMERICAN-EXPRESS', label: 'DEBIT-AMERICAN-EXPRESS' },
+  { value: 'MASTERCARD', label: 'MASTERCARD' },
+  { value: 'VISA', label: 'VISA' },
+  { value: 'AECREDIT', label: 'AECREDIT' },
+  { value: 'AEDEBIT', label: 'AEDEBIT' },
 ];
 
 const transactionsDummy = [
@@ -37,10 +60,37 @@ const statementDummy = [
   { value: '7332.12', label: 'AMOUNT4' },
 ];
 
+const cardImageMapping = {
+  MASTERCARD: mastercard,
+  VISA: visa,
+  AEDEBIT: aedebit,
+  AECREDIT: aecredit,
+};
+
+// !important: Forwarding ref is required
+const BankAccountItem = forwardRef(
+  ({ image, label, description, ...others }: any, ref) => (
+    <div ref={ref} {...others}>
+      <Group noWrap>
+        <Avatar src={image} />
+
+        <div>
+          <Text>{label}</Text>
+          <Text size="xs" color="dimmed">
+            {description}
+          </Text>
+        </div>
+      </Group>
+    </div>
+  )
+);
+
 export const Home = (): JSX.Element => {
   const [banks, setBanks] = useState(banksDummy);
+  const [selectedBank, setSelectedBank] = useState('MICB');
   const [accounts, setAccounts] = useState(accountsDummy);
   const [cards, setCards] = useState(cardsDummy);
+  const [selectedCard, setSelectedCard] = useState(mastercard);
   const [transcations, setTranscations] = useState(transactionsDummy);
   const [statement, setStatement] = useState(statementDummy);
 
@@ -50,13 +100,47 @@ export const Home = (): JSX.Element => {
         <Container size={'xs'}>
           <Tabs>
             <Tab label="Banks">
-              <Select label="Banks" placeholder="Pick one" data={banks} />
+              <Select
+                label="Banks"
+                placeholder="Pick one"
+                data={banks}
+                itemComponent={BankAccountItem}
+                onChange={(value) => {
+                  setSelectedBank(value ?? 'MICB');
+                }}
+              />
+              <Bank title={selectedBank} />
             </Tab>
             <Tab label="Accounts">
               <Select label="Accounts" placeholder="Pick one" data={accounts} />
             </Tab>
             <Tab label="Cards">
-              <Select label="Cards" placeholder="Pick one" data={cards} />
+              <Select
+                label="Cards"
+                placeholder="Pick one"
+                data={cards}
+                onChange={(value: string) => {
+                  console.log(value);
+
+                  if (cardImageMapping.hasOwnProperty(value)) {
+                    switch (value) {
+                      case 'MASTERCARD':
+                        setSelectedCard(cardImageMapping.MASTERCARD);
+                        break;
+                      case 'VISA':
+                        setSelectedCard(cardImageMapping.VISA);
+                        break;
+                      case 'AEDEBIT':
+                        setSelectedCard(cardImageMapping.AEDEBIT);
+                        break;
+                      case 'AECREDIT':
+                        setSelectedCard(cardImageMapping.AECREDIT);
+                        break;
+                    }
+                  }
+                }}
+              />
+              <Card image={selectedCard} />
             </Tab>
             <Tab label="Transactions">
               <Select
@@ -64,6 +148,7 @@ export const Home = (): JSX.Element => {
                 placeholder="Pick one"
                 data={transcations}
               />
+              <Transactions />
             </Tab>
             <Tab label="Statement">
               <Select
